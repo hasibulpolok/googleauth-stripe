@@ -1,85 +1,117 @@
 <!DOCTYPE html>
+
 <html>
+
 <head>
-    <title>Laravel 12 Stripe Payment Gateway Integration Example - ItSolutionStuff.com</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <style type="text/css">
-        #card-element{
-            height: 50px;
-            padding-top: 16px;
-        }
-    </style>
+
+    <title>Laravel Stripe Checkout Payment Integration Example - ItSolutionStuff.com</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
 </head>
+
 <body>
 
-<div class="container">
-    <div class="row">
-        <div class="col-md-8 offset-md-2">
-            <div class="card mt-5">
-                <h3 class="card-header p-3">Laravel 12 Stripe Payment Gateway Integration Example - ItSolutionStuff.com</h3>
-                <div class="card-body">
-
-                    @session('success')
-                        <div class="alert alert-success" role="alert"> 
-                            {{ $value }}
-                        </div>
-                    @endsession
-          
-                    <form id='checkout-form' method='post' action="{{ route('stripe.post') }}">   
-                        @csrf    
-
-                        <strong>Name:</strong>
-                        <input type="input" class="form-control" name="name" placeholder="Enter Name">
-
-                        <input type='hidden' name='stripeToken' id='stripe-token-id'>                              
-                        <br>
-                        <div id="card-element" class="form-control" ></div>
-                        <button 
-                            id='pay-btn'
-                            class="btn btn-success mt-3"
-                            type="button"
-                            style="margin-top: 20px; width: 100%;padding: 7px;"
-                            onclick="createToken()">PAY $10
-                        </button>
-                    <form>
-                </div>
-            </div>
-        </div>
-    </div> 
-</div>
       
-</body>
-     
-<script src="https://js.stripe.com/v3/"></script>
-<script type="text/javascript">
-  
-    var stripe = Stripe('{{ env('STRIPE_KEY') }}')
-    var elements = stripe.elements();
-    var cardElement = elements.create('card');
-    cardElement.mount('#card-element');
-  
-    /*------------------------------------------
-    --------------------------------------------
-    Create Token Code
-    --------------------------------------------
-    --------------------------------------------*/
-    function createToken() {
-        document.getElementById("pay-btn").disabled = true;
-        stripe.createToken(cardElement).then(function(result) {
+
+<div class="container">
+
+      
+
+    <h1>Laravel Stripe Checkout Payment Integration Example - ItSolutionStuff.com</h1>
+
    
-            if(typeof result.error != 'undefined') {
-                document.getElementById("pay-btn").disabled = false;
-                alert(result.error.message);
-            }
+
+    @if(Session::has('success'))
+
+    <div class="alert alert-success">
+
+        {{ Session::get('success') }}
+
+        @php
+
+            Session::forget('success');
+
+        @endphp
+
+    </div>
+
+    @endif
+
   
-            /* creating token success */
-            if(typeof result.token != 'undefined') {
-                document.getElementById("stripe-token-id").value = result.token.id;
-                document.getElementById('checkout-form').submit();
-            }
-        });
-    }
-</script>
- 
+
+    <div class="row"> 
+
+        <div class="col-md-4">
+
+            <div class="card" style="width: 18rem;">
+
+              <img src="https://dummyimage.com/300x200/000/fff" class="card-img-top" alt="...">
+
+              <div class="card-body">
+
+                <h5 class="card-title">Silver</h5>
+
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+
+                <a href="{{ route('stripe.checkout', ['price' => 10, 'product' => 'Silver']) }}" class="btn btn-primary">Pay $10</a>
+
+              </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <div class="card" style="width: 18rem;">
+
+              <img src="https://dummyimage.com/300x200/000/fff" class="card-img-top" alt="...">
+
+              <div class="card-body">
+
+                <h5 class="card-title">Gold</h5>
+
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+
+                <a href="{{ route('stripe.checkout', ['price' => 100, 'product' => 'Gold']) }}" class="btn btn-primary">Pay $100</a>
+
+              </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <div class="card" style="width: 18rem;">
+
+              <img src="https://dummyimage.com/300x200/000/fff" class="card-img-top" alt="...">
+
+              <div class="card-body">
+
+                <h5 class="card-title">Platinum</h5>
+
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+
+                <a href="{{ route('stripe.checkout', ['price' => 1000, 'product' => 'Platinum']) }}" class="btn btn-primary">Pay $1000</a>
+
+              </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+          
+
+</div>
+
+      
+
+</body>
+
+  
+
 </html>
